@@ -12,7 +12,7 @@
   </footer>
 </template>
 
-<script>
+<script lang="ts">
 import { mapGetters } from 'vuex'
 
 import FootActions from './FootActions.vue'

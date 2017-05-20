@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapActions, mapGetters } from 'vuex'
 
 import Dropdown from '../Dropdown.vue'

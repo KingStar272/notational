@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 
 import auth from './modules/auth'
 import nv from './modules/nv'
-import { getNotesForUserId } from './api'
 import {
   SET_ACTIVE_NOTE,
   SET_ACTIVE_KEY,
@@ -30,13 +29,13 @@ const store = new Vuex.Store({
   },
 
   actions: {
-    RESET_ACTIVE_NOTE: ({ state, commit, rootState }) => {
+    RESET_ACTIVE_NOTE: ({ state, commit, rootState }: any) => {
       commit(SET_RESULT_INDEX, -1)
       commit(SET_ACTIVE_NOTE, null)
       commit(SET_ACTIVE_KEY, null)
     },
 
-    RESET_APP: ({ state, commit, rootState }) => {
+    RESET_APP: ({ state, commit, rootState }: any) => {
       commit(SET_THEME, 'light')
       commit(SET_QUERY, '')
       commit(SET_RESULT_INDEX, -1)
@@ -47,37 +46,37 @@ const store = new Vuex.Store({
   },
 
   mutations: {
-    [SET_QUERY] (state, query) {
+    [SET_QUERY] (state: any, query: string) {
       state.query = query
     },
 
-    [SET_RESULT_INDEX] (state, resultIndex) {
+    [SET_RESULT_INDEX] (state: any, resultIndex: number) {
       state.resultIndex = resultIndex
     },
 
-    [SET_RENAMING_ID] (state, renamingId) {
+    [SET_RENAMING_ID] (state: any, renamingId: number) {
       state.renamingId = renamingId
     },
 
-    [SET_EDITING_ID] (state, editingId) {
+    [SET_EDITING_ID] (state: any, editingId: number) {
       state.editingId = editingId
     }
   },
 
   getters: {
-    query: state => {
+    query: (state: any) => {
       return state.query
     },
 
-    resultIndex: state => {
+    resultIndex: (state: any) => {
       return state.resultIndex
     },
 
-    renamingId: state => {
+    renamingId: (state: any) => {
       return state.renamingId
     },
 
-    editingId: state => {
+    editingId: (state: any) => {
       return state.editingId
     }
   }

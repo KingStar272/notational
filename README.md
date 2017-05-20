@@ -19,3 +19,7 @@ npm run build
 # deploy on Firebase
 npm run deploy
 ```
+
+## License
+
+Released under the MIT license. See LICENSE for details.

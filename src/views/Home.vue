@@ -60,7 +60,7 @@
         </form>
 
         <message
-          v-if="error"
+          v-if="error.length > 0"
           :text="error"
           @closeMessage="closeMessage">
         </message>
@@ -90,14 +90,25 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { ComponentOptions }  from 'vue'
 import { mapActions, mapGetters } from 'vuex'
 
-import router from '../router'
+import { User } from '../classes'
 import { localStorageMixin } from '../mixins'
 import Field from '../components/Field.vue'
 import Message from '../components/Message.vue'
 import Preview from '../components/Preview.vue'
+
+interface Home extends Vue {
+  fields: any
+  error: string
+  user: User
+  theme: string
+  SIGN_UP_USER (): any
+  INIT_NOTES (): any
+  ls_pushUser (): void
+}
 
 export default {
   name: 'home',
@@ -127,7 +138,7 @@ export default {
         autofocus: false
       }
     },
-    error: null
+    error: ''
   }),
 
   computed: {
@@ -154,7 +165,7 @@ export default {
         return
       }
 
-      const data = {
+      const data: any = {
         email: this.fields.email.value,
         password: this.fields.password.value
       }
@@ -162,12 +173,11 @@ export default {
       this.SIGN_UP_USER(data)
         .then(() => {
           this.ls_pushUser(this.user)
-          console.log()
           this.INIT_NOTES()
             .then(() => this.$router.push({ name: 'app'}))
-            .catch((error) => this.error = error.message)
+            .catch((error: any) => this.error = error.message)
         })
-        .catch((error) => {
+        .catch((error: any) => {
           this.error = error.message
         })
     },
@@ -181,7 +191,7 @@ export default {
     },
 
     closeMessage () {
-      this.error = null
+      this.error = ''
     }
   },
 
@@ -191,5 +201,5 @@ export default {
     }
   }
 
-}
+} as ComponentOptions<Home>
 </script>

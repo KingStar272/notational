@@ -1,15 +1,16 @@
-import firebase from 'firebase'
-import _ from 'lodash'
-import moment from 'moment'
+import * as firebase from 'firebase'
+import * as _ from 'lodash'
+import * as moment from 'moment'
 
-import '../../settings'
+import ENV from '../../settings'
+import { Note } from '../classes'
 
 const app = firebase.initializeApp(ENV.firebase)
 const auth = app.auth()
 const database = app.database()
 
 export default {
-	logIn (email, password) {
+	logIn (email: string, password: string) {
 		return auth.signInWithEmailAndPassword(email, password)
 	},
 
@@ -17,17 +18,17 @@ export default {
 		return auth.signOut()
 	},
 
-	signUp (email, password) {
+	signUp (email: string, password: string) {
 		return auth.createUserWithEmailAndPassword(email, password)
 	},
 
-  initNotesForUserId (userId) {
+  initNotesForUserId (userId: string) {
     const vm = this
     return new Promise((resolve, reject) => {
       return this.getDefaultNotes()
                 .then(notes => {
                   const dateModified = moment().toString()
-                  _.forEach(notes, function(note, key) {
+                  _.forEach(notes, function(note: Note, key: string) {
                     note.date_modified = dateModified
                     note.date_created = dateModified
                     vm.createNote(userId, note)
@@ -46,7 +47,7 @@ export default {
     })
   },
 
-	getDataForUserId (userId) {
+	getDataForUserId (userId: string) {
     return new Promise((resolve, reject) => {
       const userRef = database.ref(`users/${userId}`)
       return userRef.once('value')
@@ -61,7 +62,7 @@ export default {
                      .then((res) => {
                       const notes = {}
                       const dateModified = moment().subtract(1, 'minute').toString()
-                      res.val().forEach((note) => {
+                      res.val().forEach((note: Note) => {
                         note.date_modified = dateModified
                         notes[note.id] = note
                       })
@@ -70,7 +71,7 @@ export default {
     })
   },
 
-	createNote (userId, note) {
+	createNote (userId: string, note: Note) {
 		return new Promise((resolve, reject) => {
       const userNotesRef = database.ref(`users/${userId}/notes`)
       return userNotesRef.push(note)
@@ -78,7 +79,7 @@ export default {
     })
 	},
 
-  updateNote (userId, key, note) {
+  updateNote (userId: string, key: string, note: Note) {
     return new Promise((resolve, reject) => {
       const notesRef = database.ref(`users/${userId}/notes/${key}`)
       const dateModified = moment().toString()
@@ -91,12 +92,12 @@ export default {
     })
   },
 
-  deleteNote (userId, key) {
+  deleteNote (userId: string, key: string) {
     const notesRef = database.ref(`users/${userId}/notes/${key}`)
     return notesRef.remove()
   },
 
-  updateTheme (userId, theme) {
+  updateTheme (userId: string, theme: string) {
     return new Promise((resolve, reject) => {
       const userRef = database.ref(`users/${userId}`)
       return userRef.update({theme: theme})
@@ -104,7 +105,7 @@ export default {
     })
   },
 
-  getPublicNoteForId (noteId) {
+  getPublicNoteForId (noteId: string) {
     return new Promise((resolve, reject) => {
       const noteRef = database.ref(`public_notes/${noteId}`)
       return noteRef.on('value', (snapshot) => {
@@ -122,7 +123,7 @@ export default {
     })
   },
 
-  toggleIsPublic (userId, key, note) {
+  toggleIsPublic (userId: string, key: string, note: Note) {
     const is_public = !note.is_public
     return new Promise((resolve, reject) => {
       const notesRef = database.ref(`users/${userId}/notes/${key}`)

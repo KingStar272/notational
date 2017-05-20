@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapActions, mapGetters } from 'vuex'
 import Clipboard from 'clipboard'
 

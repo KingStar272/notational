@@ -2,9 +2,10 @@
   <div id="signup" class="auth">
     <h1 class="auth__title text-center">Sign Up</h1>
 
-    <message v-if="error"
-             :text="error"
-             @closeMessage="closeMessage">
+    <message
+      v-if="error.length > 0"
+      :text="error"
+      @closeMessage="closeMessage">
     </message>
     
     <form class="auth__form">
@@ -33,12 +34,23 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { ComponentOptions }  from 'vue'
 import { mapActions, mapGetters } from 'vuex'
 
+import { User } from '../../classes'
 import { localStorageMixin } from '../../mixins'
 import Field from '../../components/Field.vue'
 import Message from '../../components/Message.vue'
+
+interface SignUp extends Vue {
+  fields: any
+  error: string
+  user: User
+  SIGN_UP_USER (): any
+  INIT_NOTES (): any
+  ls_pushUser (): void
+}
 
 export default {
   name: 'signup',
@@ -74,7 +86,7 @@ export default {
         autofocus: false
       },
     },
-    error: null
+    error: ''
   }),
 
   created () {
@@ -84,7 +96,9 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters([
+      'user'
+    ])
   },
 
   methods: {
@@ -99,12 +113,12 @@ export default {
         return
       }
 
-      if (this.fields.email.value === null & this.fields.password.value === null) {
+      if (this.fields.email.value === null && this.fields.password.value === null) {
         this.error = 'Please enter an email address.'
         return
       }
 
-      const data = {
+      const data: any = {
         email: this.fields.email.value,
         password: this.fields.password.value
       }
@@ -114,15 +128,15 @@ export default {
           this.ls_pushUser(this.user)
           this.INIT_NOTES()
             .then(() => this.$router.push({ name: 'app'}))
-            .catch((error) => this.error = error.message)
+            .catch((error: any) => this.error = error.message)
         })
-        .catch((error) => {
+        .catch((error: any) => {
           this.error = error.message
         })
     },
 
     closeMessage () {
-      this.error = null
+      this.error = ''
     }
   },
 
@@ -132,6 +146,6 @@ export default {
     }
   }
 
-}
+} as ComponentOptions<SignUp>
 </script>
 

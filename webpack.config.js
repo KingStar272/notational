@@ -4,7 +4,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-  entry: './src/app.js',
+  entry: './src/app.ts',
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: "/",
@@ -23,9 +23,12 @@ module.exports = {
         }
       },
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/,
+        options: {
+          appendTsSuffixTo: [/\.vue$/],
+        }
       },
       {
         test: /\.scss$/,
@@ -46,6 +49,7 @@ module.exports = {
     ]
   },
   resolve: {
+    extensions: ['.ts', '.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.common.js'
     }

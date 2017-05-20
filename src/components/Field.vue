@@ -6,31 +6,31 @@
   <label class="field__group__label">{{ name }}</label>
 
   <input
-  v-if="type === 'password'"
-  v-focus="autofocus"
-  class="field__group__input" 
-  :placeholder="placeholder"
-  :autofocus="autofocus"
-  :value="value"
-  @input="onInput($event.target.value)"
-  @focus="isActive = true"
-  @blur="isActive = false"
-  type="password"
-  spellcheck="false">
+    v-if="type === 'password'"
+    v-focus="autofocus"
+    class="field__group__input" 
+    :placeholder="placeholder"
+    :autofocus="autofocus"
+    :value="value"
+    @input="onInput($event.target.value)"
+    @focus="isActive = true"
+    @blur="isActive = false"
+    type="password"
+    spellcheck="false">
   <input
-  v-else
-  v-focus="autofocus"
-  class="field__group__input" 
-  :placeholder="placeholder"
-  :autofocus="autofocus"
-  :value="value"
-  @input="onInput($event.target.value)"
-  @focus="isActive = true"
-  @blur="isActive = false"
-  type="text"
-  spellcheck="false">
+    v-else
+    v-focus="autofocus"
+    class="field__group__input" 
+    :placeholder="placeholder"
+    :autofocus="autofocus"
+    :value="value"
+    @input="onInput($event.target.value)"
+    @focus="isActive = true"
+    @blur="isActive = false"
+    type="text"
+    spellcheck="false">
 
-</div>
+  </div>
 </template>
 
 <script>
@@ -38,11 +38,11 @@
     name: 'field',
 
     props: [
-    'name',
-    'value',
-    'type',
-    'placeholder',
-    'autofocus'
+      'name',
+      'value',
+      'type',
+      'placeholder',
+      'autofocus'
     ],
 
     data: () => ({

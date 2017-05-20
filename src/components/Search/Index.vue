@@ -40,7 +40,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import keyboard from 'keyboardjs'
 
@@ -128,9 +128,7 @@ export default {
     onCreate () {
       const id = this.nextIdForNotes(this.notes)
       const name = this.query.length > 0 ? this.query : 'Untitled Note'
-      const note = this.createNote(id, name)
-
-      this.CREATE_NOTE(note)
+      this.CREATE_NOTE({ id: id, name: name })
     },
     
     onSearch () {

@@ -1,7 +1,8 @@
-import Vue from 'vue'
-import moment from 'moment'
+import * as Vue from 'vue'
+import * as moment from 'moment'
 
 import api from '../api'
+import { Note } from '../../classes'
 import {
   SET_RESULT_INDEX,
   SET_THEME,
@@ -21,50 +22,51 @@ const state = {
 }
 
 const actions = {
-    INIT_NOTES: ({ state, commit, rootState }) => {
+    INIT_NOTES: ({ state, commit, rootState }: any) => {
       return api.initNotesForUserId(rootState.auth.user.uid)
     },
 
-    FETCH_USER_DATA: ({ state, commit, rootState }) => {
+    FETCH_USER_DATA: ({ state, commit, rootState }: any) => {
       return api.getDataForUserId(rootState.auth.user.uid)
-                .then((res) => {
-                  commit(SET_NOTES, res.notes)
-                  commit(SET_THEME, res.theme)
-                })
+        .then((res: any) => {
+          commit(SET_NOTES, res.notes)
+          commit(SET_THEME, res.theme)
+        })
     },
 
-    FETCH_PREVIEW_DATA: ({ state, commit, rootState }) => {
+    FETCH_PREVIEW_DATA: ({ state, commit, rootState }: any) => {
       return api.getPreviewData()
-                .then((res) => {
-                  commit(SET_NOTES, res.notes)
-                  commit(SET_THEME, res.theme)
-                })
+        .then((res: any) => {
+          commit(SET_NOTES, res.notes)
+          commit(SET_THEME, res.theme)
+        })
     },
 
-    CREATE_NOTE: ({ state, commit, rootState }, note) => {
+    CREATE_NOTE: ({ state, commit, rootState }: any, data: any) => {
+      const note: Note = new Note(data.id, data.name)
       if (rootState.auth.user) {
         return api.createNote(rootState.auth.user.uid, note)
-                  .then((key) => {
-                    commit(SET_RESULT_INDEX, 0)
-                    commit(CREATE_NOTE, { key: key, note: note })
-                  })
+          .then((key: string) => {
+            commit(SET_RESULT_INDEX, 0)
+            commit(CREATE_NOTE, { key: key, note: note })
+          })
       } else {        
         commit(SET_RESULT_INDEX, 0)
         commit(CREATE_NOTE, { key: note.id, note: note })
       }
     },
 
-    UPDATE_NOTE: ({ state, commit, rootState }) => {
+    UPDATE_NOTE: ({ state, commit, rootState }: any) => {
       if (rootState.auth.user) {
         return api.updateNote(rootState.auth.user.uid, state.activeKey, state.activeNote)
-                  .then((res) => commit(UPDATE_NOTE, { key: res.key, date_modified: res.date_modified }))
+                  .then((res: any) => commit(UPDATE_NOTE, { key: res.key, date_modified: res.date_modified }))
       } else {
-        const dateModified = moment().toString()
+        const dateModified: string = moment().toString()
         commit(UPDATE_NOTE, { key: state.activeKey, date_modified: dateModified })
       }
     },
 
-    DELETE_NOTE: ({ state, commit, rootState }) => {
+    DELETE_NOTE: ({ state, commit, rootState }: any) => {
       if (rootState.auth.user) {
         return api.deleteNote(rootState.auth.user.uid, state.activeKey)
                   .then(() => { commit(DELETE_NOTE, state.activeKey)} )
@@ -73,78 +75,78 @@ const actions = {
       }
     },
 
-    UPDATE_THEME: ({ state, commit, rootState }, theme) => {
+    UPDATE_THEME: ({ state, commit, rootState }: any, theme: string) => {
       if (rootState.auth.user) {
         return api.updateTheme(rootState.auth.user.uid, theme)
-                  .then((theme) => commit(SET_THEME, theme))
+                  .then((theme: string) => commit(SET_THEME, theme))
       } else {
         commit(SET_THEME, theme)
       }
     },
 
-    TOGGLE_IS_PUBLIC: ({ state, commit, rootState }, note) => {
+    TOGGLE_IS_PUBLIC: ({ state, commit, rootState }: any, note: Note) => {
       return api.toggleIsPublic(rootState.auth.user.uid, state.activeKey, note)
-                .then((res) => commit(TOGGLE_IS_PUBLIC, { key: res.key, is_public: res.is_public }))
+                .then((res: any) => commit(TOGGLE_IS_PUBLIC, { key: res.key, is_public: res.is_public }))
     },
 
-    FETCH_PUBLIC_NOTE_FOR_ID: ({ state, commit, rootState }, noteId) => {
+    FETCH_PUBLIC_NOTE_FOR_ID: ({ state, commit, rootState }: any, noteId: string) => {
       return api.getPublicNoteForId(noteId)
-                .then((note) => commit(SET_ACTIVE_NOTE, note))
+                .then((note: Note) => commit(SET_ACTIVE_NOTE, note))
     }
 }
 
 const mutations = {
-    [SET_THEME] (state, theme) {
+    [SET_THEME] (state: any, theme: string) {
       state.theme = theme
     },
 
-    [SET_NOTES] (state, notes) {
+    [SET_NOTES] (state: any, notes: Array<Note>) {
       state.notes = notes
     },
 
-    [SET_ACTIVE_NOTE] (state, note) {
+    [SET_ACTIVE_NOTE] (state: any, note: Note) {
       state.activeNote = note
     },
 
-    [SET_ACTIVE_KEY] (state, key) {
+    [SET_ACTIVE_KEY] (state: any, key: string) {
       state.activeKey = key
     },
 
-    [CREATE_NOTE] (state, data) {
+    [CREATE_NOTE] (state: any, data: any) {
       Vue.set(state.notes, data.key, data.note)
       state.activeKey = data.key
       state.activeNote = data.note
     },
 
-    [UPDATE_NOTE] (state, data) {
+    [UPDATE_NOTE] (state: any, data: any) {
       let note = state.notes[`${data.key}`]
       note.date_modified = data.date_modified
     },
 
-    [DELETE_NOTE] (state, key) {
+    [DELETE_NOTE] (state: any, key: string) {
       Vue.delete(state.notes, key)
     },
 
-    [TOGGLE_IS_PUBLIC] (state, data) {
+    [TOGGLE_IS_PUBLIC] (state: any, data: any) {
       let note = state.notes[`${data.key}`]
       note.is_public = data.is_public 
     }
 }
 
 const getters = {
-    theme: state => {
+    theme: (state: any) => {
       return state.theme
     },
 
-    notes: state => {
+    notes: (state: any) => {
       return state.notes
     },
 
-    activeNote: state => {
+    activeNote: (state: any) => {
       return state.activeNote
     },
 
-    activeKey: state => {
+    activeKey: (state: any) => {
       return state.activeKey
     }
 }

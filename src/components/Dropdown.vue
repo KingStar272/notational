@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapActions, mapGetters } from 'vuex'
 
 import { localStorageMixin } from '../mixins'

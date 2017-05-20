@@ -3,7 +3,7 @@
     <h1 class="auth__title text-center">Welcome Back</h1>
 
     <message
-      v-if="error"
+      v-if="error.length > 0"
       :text="error"
       @closeMessage="closeMessage">
     </message>
@@ -34,12 +34,22 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { ComponentOptions }  from 'vue'
 import { mapActions, mapGetters } from 'vuex'
 
+import { User } from '../../classes'
 import { localStorageMixin } from '../../mixins'
 import Field from '../../components/Field.vue'
 import Message from '../../components/Message.vue'
+
+interface LogIn extends Vue {
+  fields: any
+  error: string
+  user: User
+  LOG_IN_USER (): any
+  ls_pushUser (): void
+}
 
 export default {
   name: 'login',
@@ -68,7 +78,7 @@ export default {
         autofocus: false
       }
     },
-    error: null
+    error: ''
   }),
 
   created () {
@@ -78,11 +88,14 @@ export default {
   },
   
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters([
+      'user'
+    ])
   },
 
   methods: {
-    ...mapActions(['LOG_IN_USER'
+    ...mapActions([
+      'LOG_IN_USER'
     ]),
 
     onLogIn () {
@@ -96,7 +109,7 @@ export default {
         return
       }
 
-      const data = {
+      const data: any = {
         email: this.fields.email.value,
         password: this.fields.password.value
       }
@@ -105,13 +118,13 @@ export default {
           this.ls_pushUser(this.user)
           this.$router.push({ name: 'app'})
         })
-        .catch((error) => {
+        .catch((error: any) => {
           this.error = error.message
         })
     },
 
     closeMessage () {
-      this.error = null
+      this.error = ''
     }
   },
 
@@ -121,5 +134,5 @@ export default {
     }
   }
 
-}
+} as ComponentOptions<LogIn>
 </script>

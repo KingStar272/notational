@@ -22,123 +22,132 @@
   </div>
 </template>
 
-<script>
-  import { mapActions, mapGetters } from 'vuex'
+<script lang="ts">
+import Vue, { ComponentOptions }  from 'vue'
+import { mapActions, mapGetters } from 'vuex'
 
-  import Spinner from '../../components/Spinner.vue'
+import { Note } from '../../classes'
+import Spinner from '../../components/Spinner.vue'
 
-  export default {
-    name: 'public',
+interface Public extends Vue {
+  loading: boolean
+  activeNote: Note
+  FETCH_PUBLIC_NOTE_FOR_ID (): any
+  getNote (): void
+}
 
-    data: () => ({
-      loading: true,
-    }),
+export default {
+  name: 'public',
 
-    created () {
-      if (this.$route.params.id) {
-        this.getNote()
-      }
-    },
+  data: () => ({
+    loading: true,
+  }),
 
-    components: {
-      Spinner
-    },
+  created () {
+    if (this.$route.params.id) {
+      this.getNote()
+    }
+  },
 
-    computed: {
-      ...mapGetters([
-        'activeNote'
-      ]),
+  components: {
+    Spinner
+  },
 
-      body () {
-        return this.activeNote.body.replace('\n', '<br/>')
-      }
-    },
+  computed: {
+    ...mapGetters([
+      'activeNote'
+    ]),
 
-    methods: {
-      ...mapActions([
-        'FETCH_PUBLIC_NOTE_FOR_ID'
-      ]),
+    body () {
+      return this.activeNote.body.replace('\n', '<br/>')
+    }
+  },
 
-      getNote () {
-        this.FETCH_PUBLIC_NOTE_FOR_ID(this.$route.params.id)
+  methods: {
+    ...mapActions([
+      'FETCH_PUBLIC_NOTE_FOR_ID'
+    ]),
+
+    getNote () {
+      this.FETCH_PUBLIC_NOTE_FOR_ID(this.$route.params.id)
         .then(() => this.loading = false)
         .catch(() => this.$router.push({ name: 'home' }))
-      }
-    },
-
-    watch: {
-      '$route': 'getNote'
     }
+  },
 
+  watch: {
+    '$route': 'getNote'
   }
+
+} as ComponentOptions<Public>
 </script>
 
 <style lang="scss">
-  @import '../../scss/_variables.scss';
-  @import '../../scss/_functions.scss';
+@import '../../scss/_variables.scss';
+@import '../../scss/_functions.scss';
 
-  .public {
-    &__header, &__body {
-      border-bottom: {
-        width: 1px;
-        style: solid;
-        color: palette(gray, light);
-      }
+.public {
+  &__header, &__body {
+    border-bottom: {
+      width: 1px;
+      style: solid;
+      color: palette(gray, light);
+    }
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: {
+      bottom: .35rem;
     }
 
-    &__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: {
-        bottom: .35rem;
-      }
-
-      h1 {
-        color: palette(orange);
-        margin: 0;
-        font: {
-          size: 1rem;
-        }
-      }
-
-      span {
-        font: {
-          size: .85rem;
-        }
-      }
-    }
-
-    &__body {
-      word-wrap: break-word;
-      white-space: pre-wrap;
-      height: 18rem;
-      overflow-y: scroll;
-      color: palette(black);
+    h1 {
+      color: palette(orange);
+      margin: 0;
       font: {
-        size: .95rem;
-        family: $sans-serif;
-      }
-      padding: {
-        top: .75rem;
-        bottom: .75rem;
-      }
-      margin: {
-        bottom: .5rem;
+        size: 1rem;
       }
     }
 
-    &__footer {
-      text-align: center;
+    span {
       font: {
-        weight: 500;
-        size: .9rem;
-      }
-
-      a {
-        color: palette(orange);
-        transition: color $transition;
+        size: .85rem;
       }
     }
   }
+
+  &__body {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    height: 18rem;
+    overflow-y: scroll;
+    color: palette(black);
+    font: {
+      size: .95rem;
+      family: $sans-serif;
+    }
+    padding: {
+      top: .75rem;
+      bottom: .75rem;
+    }
+    margin: {
+      bottom: .5rem;
+    }
+  }
+
+  &__footer {
+    text-align: center;
+    font: {
+      weight: 500;
+      size: .9rem;
+    }
+
+    a {
+      color: palette(orange);
+      transition: color $transition;
+    }
+  }
+}
 </style>

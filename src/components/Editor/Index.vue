@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import keyboard from 'keyboardjs'
 

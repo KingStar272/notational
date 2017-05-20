@@ -44,11 +44,36 @@
   </li>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { ComponentOptions }  from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
-import keyboard from 'keyboardjs'
+import * as keyboard from 'keyboardjs'
 
+import { Note } from '../../classes'
 import { utilsMixin } from '../../mixins'
+
+interface SearchResult extends Vue {
+  oldName: string
+  isRenamed: boolean
+  showDelete: boolean
+  note: Note
+  isActive: boolean
+  renaming: boolean
+  query: string
+  activeNote: Note
+  name (): any
+  UPDATE_NOTE (): any
+  DELETE_NOTE (): any
+  RESET_ACTIVE_NOT (): any
+  SET_RESULT_INDEX (): any
+  SET_RENAMING_ID (): any
+  setUpHotKeys: void
+  onResultSelect: void
+  onRenameBlur: void
+  onRenameSave: void
+  onSearchFocus: void
+  onDelete: void
+}
 
 export default {
   name: 'search-result',
@@ -58,7 +83,7 @@ export default {
   mixins: [utilsMixin],
 
   data: () => ({
-    oldName: null,
+    oldName: '',
     isRenamed: false,
     showDelete: false
   }),
@@ -75,8 +100,8 @@ export default {
 
     name () {
       if (this.query.length > 0) {
-        const regexString = this.query.replace(/\s/g, '|')
-        const re = new RegExp(regexString, 'gi')
+        const regexString: any = this.query.replace(/\s/g, '|')
+        const re: any = new RegExp(regexString, 'gi')
         return this.note.name
                    .replace(/\n$/g, '\n\n')
                    .replace(re, '<mark>$&</mark>')
@@ -121,7 +146,7 @@ export default {
     },
 
     onRenameBlur () {
-      if (this.oldName != null && this.name !== this.oldName && !this.isRenamed) {
+      if (this.oldName != '' && this.name !== this.oldName && !this.isRenamed) {
         this.note.name = this.oldName
       }
       this.isRenamed = false
@@ -132,7 +157,7 @@ export default {
 
     onRenameSave () {
       this.UPDATE_NOTE()
-      this.oldName = null
+      this.oldName = ''
       this.isRenamed = true
       this.SET_RESULT_INDEX(0)
       this.onRenameBlur()
@@ -149,4 +174,4 @@ export default {
   }
 
 }
-</script>
+</script> as ComponentOptions<SearchResult>

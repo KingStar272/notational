@@ -8,7 +8,7 @@ import * as directives from './directives'
 import * as filters from './filters'
 
 
-Object.keys(filters).forEach(key => { Vue.filter(key, filters[key]) })
+Object.keys(filters).forEach((key: string) => { Vue.filter(key, filters[key]) })
 
 const app = new Vue({
   el: '#app',

@@ -1,7 +1,7 @@
-import Vue from 'vue'
-import VueHead from 'vue-head'
-import VueRouter from 'vue-router'
-import ls from 'local-storage'
+import * as Vue from 'vue'
+import * as VueHead from 'vue-head'
+import VueRouter, { Route, RouteRecord } from 'vue-router'
+import * as ls from 'local-storage'
 
 import Home from '../views/Home.vue'
 import NotFound from '../views/NotFound.vue'
@@ -25,9 +25,9 @@ const router = new VueRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to: Route, from: Route, next: any) => {
   const user = ls.get('user')
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  if (to.matched.some((record: RouteRecord) => record.meta.requiresAuth)) {
     if (user) {
       next()
     } else {
